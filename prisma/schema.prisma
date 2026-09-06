@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Mobil {
+  id             Int              @id @default(autoincrement())
+  nama           String           // Misal: HONDA CR-V, TOYOTA INNOVA
+  tipe           String?          // Misal: SUV, MPV, Sedan
+  nomorRangka    String?
+  nomorMesin     String?
+  keterangan     String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  historiPemakai HistoriPemakai[]
+  riwayatServis  Servis[]
+}
+
+model HistoriPemakai {
+  id             Int       @id @default(autoincrement())
+  mobilId        Int
+  mobil          Mobil     @relation(fields: [mobilId], references: [id], onDelete: Cascade)
+  nopol          String    // Plat nomor aktif pada periode ini, misal: K 6 B
+  namaPengguna   String    // Nama pejabat / pemakai, misal: Bapak Ahmad
+  jabatan        String?   // Jabatan pemakai, misal: Kepala Dinas
+  tanggalMulai   DateTime  @default(now())
+  tanggalSelesai DateTime?
+  isAktif        Boolean   @default(true)
+  catatan        String?
+  createdAt      DateTime  @default(now())
+}
+
+model Servis {
+  id          Int          @id @default(autoincrement())
+  mobilId     Int
+  mobil       Mobil        @relation(fields: [mobilId], references: [id], onDelete: Cascade)
+  tanggal     DateTime     // Tanggal pelaksanaan servis
+  bengkel     String       // Nama bengkel, misal: HONDA KUDUS JAYA
+  nomorNota   String?      // Nomor nota / kuitansi fisik
+  totalBiaya  Int          @default(0) // Akumulasi total biaya servis
+  keterangan  String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  items       ItemServis[]
+}
+
+model ItemServis {
+  id          Int      @id @default(autoincrement())
+  servisId    Int
+  servis      Servis   @relation(fields: [servisId], references: [id], onDelete: Cascade)
+  uraian      String   // Misal: Ganti Oli Mesin Shell 4L, Filter Oli, Jasa Servis
+  jumlah      Int      @default(1)
+  hargaSatuan Int      @default(0)
+  subtotal    Int      @default(0)
+}
