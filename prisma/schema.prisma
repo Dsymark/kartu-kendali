@@ -1,21 +1,22 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
 
 model Mobil {
-  id             Int              @id @default(autoincrement())
-  nama           String           // Misal: HONDA CR-V, TOYOTA INNOVA
-  tipe           String?          // Misal: SUV, MPV, Sedan
-  nomorRangka    String?
-  nomorMesin     String?
-  keterangan     String?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  id              Int              @id @default(autoincrement())
+  nama            String           // Misal: HONDA CR-V, TOYOTA INNOVA
+  tipe            String?          // Misal: SUV, MPV, Sedan
+  nomorRangka     String?
+  nomorMesin      String?
+  keterangan      String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
   historiPemakai HistoriPemakai[]
   riwayatServis  Servis[]
