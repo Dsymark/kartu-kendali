@@ -77,6 +77,7 @@ export async function GET(request: NextRequest) {
     sheet1.columns = [
       { header: "No", key: "no", width: 6 },
       { header: "Tanggal", key: "tanggal", width: 14 },
+      { header: "Jenis", key: "jenis", width: 12 },
       { header: "Kendaraan", key: "mobil", width: 22 },
       { header: "Nopol Aktif", key: "nopol", width: 14 },
       { header: "Pejabat / Pemakai", key: "pemakai", width: 25 },
@@ -114,6 +115,7 @@ export async function GET(request: NextRequest) {
       const row = sheet1.addRow({
         no: index + 1,
         tanggal: item.tanggal.toISOString().split("T")[0],
+        jenis: item.mobil.jenis,
         mobil: item.mobil.nama,
         nopol: pemakaiAktif?.nopol || "-",
         pemakai: pemakaiAktif?.namaPengguna || "-",
@@ -140,7 +142,7 @@ export async function GET(request: NextRequest) {
     // AUTOFILTER DI HEADER (Semua kolom bisa difilter & disortir langsung)
     sheet1.autoFilter = {
       from: { row: 1, column: 1 },
-      to: { row: 1, column: 10 },
+      to: { row: 1, column: 11 },
     };
 
     // BARIS TOTAL DENGAN RUMUS SUM ASLI
@@ -179,6 +181,7 @@ export async function GET(request: NextRequest) {
     sheet2.columns = [
       { header: "No", key: "no", width: 6 },
       { header: "Tanggal", key: "tanggal", width: 14 },
+      { header: "Jenis", key: "jenis", width: 12 },
       { header: "Kendaraan", key: "mobil", width: 22 },
       { header: "No. Nota", key: "nota", width: 16 },
       { header: "Bengkel", key: "bengkel", width: 25 },
@@ -210,6 +213,7 @@ export async function GET(request: NextRequest) {
         const row = sheet2.addRow({
           no: itemCounter++,
           tanggal: servis.tanggal.toISOString().split("T")[0],
+          jenis: servis.mobil.jenis,
           mobil: servis.mobil.nama,
           nota: servis.nomorNota || "-",
           bengkel: servis.bengkel,
@@ -235,7 +239,7 @@ export async function GET(request: NextRequest) {
     // AUTOFILTER DI SHEET 2
     sheet2.autoFilter = {
       from: { row: 1, column: 1 },
-      to: { row: 1, column: 9 },
+      to: { row: 1, column: 10 },
     };
 
     // RUMUS SUM DI SHEET 2

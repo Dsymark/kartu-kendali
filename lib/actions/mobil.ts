@@ -72,6 +72,7 @@ export async function getDetailMobil(id: number) {
 
 export async function tambahMobil(data: {
   nama: string;
+  jenis: string;
   tipe?: string;
   nomorRangka?: string;
   nomorMesin?: string;
@@ -83,6 +84,7 @@ export async function tambahMobil(data: {
     const mobil = await prisma.mobil.create({
       data: {
         nama: data.nama.trim(),
+        jenis: data.jenis === "Motor" ? "Motor" : "Mobil",
         tipe: data.tipe?.trim() || null,
         nomorRangka: data.nomorRangka?.trim() || null,
         nomorMesin: data.nomorMesin?.trim() || null,

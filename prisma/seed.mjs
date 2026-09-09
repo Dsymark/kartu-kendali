@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
+import { createClient } from "@libsql/client";
+import { PrismaLibSQL } from "@prisma/adapter-libsql";
 
-const prisma = new PrismaClient();
+const database = createClient({ url: "file:./prisma/dev.db" });
+const prisma = new PrismaClient({ adapter: new PrismaLibSQL(database) });
 
 async function main() {
   const count = await prisma.mobil.count();
@@ -15,6 +18,7 @@ async function main() {
   await prisma.mobil.create({
     data: {
       nama: "HONDA CR-V 1.5 TURBO",
+      jenis: "Mobil",
       tipe: "SUV",
       nomorRangka: "MH1RW1880KK102931",
       nomorMesin: "L15BG1028301",
@@ -80,6 +84,7 @@ async function main() {
   await prisma.mobil.create({
     data: {
       nama: "TOYOTA INNOVA REBORN 2.4 G",
+      jenis: "Mobil",
       tipe: "MPV",
       historiPemakai: {
         create: [
@@ -110,6 +115,23 @@ async function main() {
             },
           },
         ],
+      },
+    },
+  });
+
+  await prisma.mobil.create({
+    data: {
+      nama: "HONDA VARIO 160",
+      jenis: "Motor",
+      tipe: "Skuter",
+      historiPemakai: {
+        create: {
+          nopol: "K 5678 C",
+          namaPengguna: "Bapak Andi Pratama",
+          jabatan: "Staf Operasional",
+          isAktif: true,
+          catatan: "Motor dinas operasional lapangan",
+        },
       },
     },
   });

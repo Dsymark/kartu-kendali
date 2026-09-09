@@ -11,6 +11,7 @@ datasource db {
 model Mobil {
   id              Int              @id @default(autoincrement())
   nama            String           // Misal: HONDA CR-V, TOYOTA INNOVA
+  jenis           String           @default("Mobil") // Mobil atau Motor
   tipe            String?          // Misal: SUV, MPV, Sedan
   nomorRangka     String?
   nomorMesin      String?

@@ -21,7 +21,7 @@ export default function DashboardPage() {
   const [mobilList, setMobilList] = useState<MobilData[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterTipe, setFilterTipe] = useState("semua");
+  const [filterJenis, setFilterJenis] = useState("semua");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   async function loadData() {
@@ -52,12 +52,14 @@ export default function DashboardPage() {
     const pengguna = m.pemakaiAktif?.namaPengguna?.toLowerCase() || "";
     const matchesSearch = nama.includes(q) || nopol.includes(q) || pengguna.includes(q);
 
-    if (filterTipe === "semua") return matchesSearch;
-    return matchesSearch && m.tipe?.toLowerCase().includes(filterTipe.toLowerCase());
+    const matchesJenis = filterJenis === "semua" || m.jenis === filterJenis;
+    return matchesSearch && matchesJenis;
   });
 
   // Kalkulasi statistik keseluruhan
-  const totalMobil = mobilList.length;
+  const totalKendaraan = mobilList.length;
+  const totalMobil = mobilList.filter((m) => m.jenis === "Mobil").length;
+  const totalMotor = mobilList.filter((m) => m.jenis === "Motor").length;
   const totalServis = mobilList.reduce((acc, m) => acc + m.jumlahServis, 0);
   const totalPengeluaran = mobilList.reduce((acc, m) => acc + m.totalBiaya, 0);
 
@@ -79,7 +81,7 @@ export default function DashboardPage() {
               Sistem Kartu Kendali Armada Dinas
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
-              Pantau histori penanggung jawab, perubahan nopol, serta rincian nota servis berkala untuk seluruh mobil dinas operasional secara transparan dan akurat.
+              Pantau histori penanggung jawab, perubahan nopol, serta rincian nota servis berkala untuk seluruh mobil dan motor dinas secara transparan dan akurat.
             </p>
           </div>
 
@@ -97,7 +99,7 @@ export default function DashboardPage() {
               className="inline-flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-2xl shadow-lg shadow-blue-600/30 active:scale-95 transition"
             >
               <Plus className="w-4 h-4" />
-              <span>+ Tambah Mobil Baru</span>
+              <span>+ Tambah Kendaraan Baru</span>
             </button>
           </div>
         </div>
@@ -117,11 +119,11 @@ export default function DashboardPage() {
           </div>
           <div className="mt-4">
             <div className="text-3xl font-black text-slate-900 tracking-tight">
-              {totalMobil}{" "}
+              {totalKendaraan}{" "}
               <span className="text-sm font-bold text-slate-400">Kendaraan</span>
             </div>
             <p className="text-[11px] text-slate-500 mt-1">
-              Semua tercatat aktif dalam kartu kendali
+              {totalMobil} mobil, {totalMotor} motor tercatat aktif
             </p>
           </div>
           <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-600" />
@@ -178,7 +180,7 @@ export default function DashboardPage() {
           <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Cari nama mobil, nopol (K 6 B), atau nama pejabat..."
+            placeholder="Cari kendaraan, nopol, atau nama pejabat..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-11 pr-4 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-200/90 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition"
@@ -196,17 +198,15 @@ export default function DashboardPage() {
         {/* Category Filter Pills & Refresh */}
         <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end">
           <div className="flex items-center gap-1.5 overflow-x-auto py-1">
-            {["semua", "SUV", "MPV", "Sedan"].map((tipe) => (
+            {["semua", "Mobil", "Motor"].map((jenis) => (
               <button
-                key={tipe}
-                onClick={() => setFilterTipe(tipe)}
+                key={jenis}
+                onClick={() => setFilterJenis(jenis)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition capitalize ${
-                  filterTipe === tipe
-                    ? "bg-slate-900 text-white shadow-sm"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  filterJenis === jenis ? "bg-slate-900 text-white shadow-sm" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
               >
-                {tipe}
+                {jenis}
               </button>
             ))}
           </div>
@@ -243,12 +243,12 @@ export default function DashboardPage() {
           </div>
           <div className="max-w-md mx-auto space-y-1">
             <h3 className="text-base font-extrabold text-slate-900">
-              {searchQuery ? "Mobil tidak ditemukan" : "Belum ada armada terdaftar"}
+              {searchQuery ? "Kendaraan tidak ditemukan" : "Belum ada armada terdaftar"}
             </h3>
             <p className="text-xs text-slate-500 leading-relaxed">
               {searchQuery
                 ? `Tidak ditemukan kendaraan dengan kata kunci "${searchQuery}". Coba periksa kembali ejaan plat nomor atau nama mobil.`
-                : "Mulai kelola inventaris mobil dinas kantor dengan mendaftarkan mobil pertama Anda sekarang."}
+                : "Mulai kelola inventaris kendaraan dinas kantor dengan mendaftarkan kendaraan pertama Anda sekarang."}
             </p>
           </div>
           {!searchQuery && (
@@ -257,7 +257,7 @@ export default function DashboardPage() {
               className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-2xl shadow-md shadow-blue-500/20 transition"
             >
               <Plus className="w-4 h-4" />
-              <span>+ Daftarkan Mobil Pertama</span>
+              <span>+ Daftarkan Kendaraan Pertama</span>
             </button>
           )}
         </div>

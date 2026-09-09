@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { Wrench, ChevronRight, FileSpreadsheet } from "lucide-react";
+import { Wrench, ChevronRight, FileSpreadsheet, Car, Bike } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 
 interface MobilCardProps {
   mobil: {
     id: number;
     nama: string;
+    jenis: string;
     tipe: string | null;
     pemakaiAktif?: {
       nopol: string;
@@ -38,7 +39,7 @@ export default function MobilCard({ mobil }: MobilCardProps) {
         <div className="space-y-1 flex-1">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-200">
-              {mobil.tipe || "Armada Dinas"}
+              {mobil.jenis} / {mobil.tipe || "Armada Dinas"}
             </span>
             <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -46,7 +47,10 @@ export default function MobilCard({ mobil }: MobilCardProps) {
             </span>
           </div>
           <h3 className="text-lg font-black text-slate-900 group-hover:text-blue-600 transition tracking-tight">
-            {mobil.nama}
+            <span className="flex items-center gap-2">
+              {mobil.jenis === "Motor" ? <Bike className="w-5 h-5 text-slate-400" /> : <Car className="w-5 h-5 text-slate-400" />}
+              {mobil.nama}
+            </span>
           </h3>
         </div>
 

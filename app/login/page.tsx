@@ -142,18 +142,6 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Helpful Info Footer */}
-        <div className="mt-6 pt-5 border-t border-slate-800/80 text-center space-y-2">
-          <p className="text-[11px] text-slate-400 leading-relaxed">
-            🔑 Kata sandi awal bawaan:{" "}
-            <code className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400 font-bold">
-              kendali2026
-            </code>
-          </p>
-          <p className="text-[10px] text-slate-500">
-            Dapat diubah kapan saja di berkas konfigurasi <code className="text-slate-400">.env</code>
-          </p>
-        </div>
       </div>
     </div>
   );

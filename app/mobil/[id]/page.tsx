@@ -102,7 +102,7 @@ export default function DetailMobilPage() {
         <div className="w-16 h-16 rounded-3xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
           <Car className="w-8 h-8" />
         </div>
-        <h2 className="text-xl font-bold text-slate-800">Mobil Tidak Ditemukan</h2>
+        <h2 className="text-xl font-bold text-slate-800">Kendaraan Tidak Ditemukan</h2>
         <p className="text-xs text-slate-500">Data armada ini tidak ada atau telah dihapus.</p>
         <Link
           href="/"
@@ -320,7 +320,7 @@ export default function DetailMobilPage() {
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-400/30">
-                  {mobil.tipe || "Mobil Dinas"}
+                  {mobil.jenis} / {mobil.tipe || "Kendaraan Dinas"}
                 </span>
                 <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -346,7 +346,7 @@ export default function DetailMobilPage() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="bg-slate-900/90 border border-slate-700/80 px-5 py-3 rounded-2xl backdrop-blur-md">
               <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
-                Total Pengeluaran Mobil Ini
+                Total Pengeluaran Kendaraan Ini
               </span>
               <span className="text-xl font-black text-emerald-400 block mt-0.5">
                 {formatRupiah(mobil.totalBiaya)}
@@ -377,7 +377,7 @@ export default function DetailMobilPage() {
               <a
                 href={`/api/export/excel?mobilId=${mobil.id}${filterTahun !== "semua" ? `&tahun=${filterTahun}` : ""}`}
                 className="inline-flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-bold text-emerald-300 bg-emerald-950/80 hover:bg-emerald-900/80 border border-emerald-700/50 rounded-2xl transition"
-                title="Download Excel hidup untuk mobil ini"
+                title="Download Excel untuk kendaraan ini"
               >
                 <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
                 <span>Excel</span>

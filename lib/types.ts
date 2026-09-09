@@ -33,6 +33,7 @@ export interface HistoriPemakaiData {
 export interface MobilData {
   id: number;
   nama: string;
+  jenis: string;
   tipe: string | null;
   nomorRangka?: string | null;
   nomorMesin?: string | null;
