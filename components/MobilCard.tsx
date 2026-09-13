@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
-import { Wrench, ChevronRight, FileSpreadsheet, Car, Bike } from "lucide-react";
+import { useState } from "react";
+import { Wrench, ChevronRight, FileSpreadsheet, Car, Bike, Trash2 } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
+import { hapusMobil } from "@/lib/actions/mobil";
 
 interface MobilCardProps {
+  onDeleted: () => void;
   mobil: {
     id: number;
     nama: string;
@@ -18,8 +23,26 @@ interface MobilCardProps {
   };
 }
 
-export default function MobilCard({ mobil }: MobilCardProps) {
+export default function MobilCard({ mobil, onDeleted }: MobilCardProps) {
   const pemakai = mobil.pemakaiAktif;
+  const [deleting, setDeleting] = useState(false);
+
+  async function handleDelete() {
+    const confirmed = window.confirm(
+      `Hapus ${mobil.jenis.toLowerCase()} ${mobil.nama}? Semua histori pemakai dan servisnya juga akan terhapus.`
+    );
+    if (!confirmed) return;
+
+    setDeleting(true);
+    const result = await hapusMobil(mobil.id);
+    setDeleting(false);
+
+    if (result.success) {
+      onDeleted();
+    } else {
+      window.alert(result.error || "Gagal menghapus kendaraan.");
+    }
+  }
 
   // Mendapatkan inisial nama pemegang
   const getInitials = (name?: string) => {
@@ -132,6 +155,17 @@ export default function MobilCard({ mobil }: MobilCardProps) {
           <span>Buka Kartu Kendali</span>
           <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Link>
+
+        <button
+          type="button"
+          onClick={handleDelete}
+          disabled={deleting}
+          title="Hapus kendaraan"
+          aria-label={`Hapus ${mobil.nama}`}
+          className="p-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-xl transition disabled:opacity-50"
+        >
+          <Trash2 className={`w-4 h-4 ${deleting ? "animate-pulse" : ""}`} />
+        </button>
       </div>
     </div>
   );

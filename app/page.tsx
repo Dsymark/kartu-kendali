@@ -233,7 +233,7 @@ export default function DashboardPage() {
       ) : filteredMobil.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredMobil.map((m) => (
-            <MobilCard key={m.id} mobil={m} />
+            <MobilCard key={m.id} mobil={m} onDeleted={loadData} />
           ))}
         </div>
       ) : (
