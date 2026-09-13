@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/actions/auth";
 
 export interface ItemServisInput {
   uraian: string;
@@ -21,6 +22,7 @@ export async function catatServis(
   }
 ) {
   try {
+    await requireAdmin();
     const totalBiaya = data.items.reduce((acc, item) => acc + (Number(item.subtotal) || 0), 0);
 
     const servis = await prisma.servis.create({
@@ -64,6 +66,7 @@ export async function updateServis(
   }
 ) {
   try {
+    await requireAdmin();
     const totalBiaya = data.items.reduce((acc, item) => acc + (Number(item.subtotal) || 0), 0);
 
     // Hapus item lama dan buat item baru (atomic transaction)
@@ -103,6 +106,7 @@ export async function updateServis(
 
 export async function hapusServis(servisId: number, mobilId: number) {
   try {
+    await requireAdmin();
     await prisma.servis.delete({
       where: { id: servisId },
     });

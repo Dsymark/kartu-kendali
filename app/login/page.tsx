@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { Car, Lock, User, Eye, EyeOff, ShieldCheck, ArrowRight, AlertCircle } from "lucide-react";
-import { loginAction } from "@/lib/actions/auth";
+import { loginAction, UserRole } from "@/lib/actions/auth";
 
 export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [namaPetugas, setNamaPetugas] = useState("");
+  const [role, setRole] = useState<UserRole>("admin");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +22,7 @@ export default function LoginPage() {
     }
 
     setLoading(true);
-    const res = await loginAction(password, namaPetugas);
+    const res = await loginAction(password, namaPetugas, role);
     setLoading(false);
 
     if (res.success) {
@@ -79,6 +80,20 @@ export default function LoginPage() {
           )}
 
           {/* Input Password */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              Mode Akses <span className="text-rose-400">*</span>
+            </label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value as UserRole)}
+              className="w-full px-3.5 py-3 bg-slate-800/60 border border-slate-700/80 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            >
+              <option value="admin">Admin - Kelola data</option>
+              <option value="viewer">Viewer - Lihat saja</option>
+            </select>
+          </div>
+
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1.5">
               Kata Sandi Akses <span className="text-rose-400">*</span>

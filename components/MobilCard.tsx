@@ -8,6 +8,7 @@ import { hapusMobil } from "@/lib/actions/mobil";
 
 interface MobilCardProps {
   onDeleted: () => void;
+  canEdit: boolean;
   mobil: {
     id: number;
     nama: string;
@@ -23,7 +24,7 @@ interface MobilCardProps {
   };
 }
 
-export default function MobilCard({ mobil, onDeleted }: MobilCardProps) {
+export default function MobilCard({ mobil, onDeleted, canEdit }: MobilCardProps) {
   const pemakai = mobil.pemakaiAktif;
   const [deleting, setDeleting] = useState(false);
 
@@ -156,7 +157,7 @@ export default function MobilCard({ mobil, onDeleted }: MobilCardProps) {
           <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Link>
 
-        <button
+        {canEdit && <button
           type="button"
           onClick={handleDelete}
           disabled={deleting}
@@ -165,7 +166,7 @@ export default function MobilCard({ mobil, onDeleted }: MobilCardProps) {
           className="p-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-xl transition disabled:opacity-50"
         >
           <Trash2 className={`w-4 h-4 ${deleting ? "animate-pulse" : ""}`} />
-        </button>
+        </button>}
       </div>
     </div>
   );

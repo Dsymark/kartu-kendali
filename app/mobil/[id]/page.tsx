@@ -25,6 +25,7 @@ import { getDetailMobil, mutasiPemakai } from "@/lib/actions/mobil";
 import { catatServis, updateServis, hapusServis, ItemServisInput } from "@/lib/actions/servis";
 import { formatRupiah, formatTanggal, getTodayDateString } from "@/lib/utils";
 import { MobilData, ServisData, ItemServisData, HistoriPemakaiData } from "@/lib/types";
+import { getSesiPetugas } from "@/lib/actions/auth";
 
 export default function DetailMobilPage() {
   const params = useParams();
@@ -34,6 +35,7 @@ export default function DetailMobilPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"servis" | "histori">("servis");
   const [filterTahun, setFilterTahun] = useState<string>("semua");
+  const [canEdit, setCanEdit] = useState(false);
 
   // State Modals
   const [isModalServisOpen, setIsModalServisOpen] = useState(false);
@@ -84,6 +86,7 @@ export default function DetailMobilPage() {
   useEffect(() => {
     if (!isNaN(mobilId)) {
       loadMobil();
+      getSesiPetugas().then((session) => setCanEdit(session?.role === "admin"));
     }
   }, [mobilId, loadMobil]);
 
@@ -354,15 +357,15 @@ export default function DetailMobilPage() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <button
+              {canEdit && <button
                 onClick={bukaModalTambahServis}
                 className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-2xl shadow-lg shadow-blue-600/30 active:scale-95 transition"
               >
                 <Plus className="w-4 h-4" />
                 <span>+ Catat Servis</span>
-              </button>
+              </button>}
 
-              <button
+              {canEdit && <button
                 onClick={() => {
                   setIsModalMutasiOpen(true);
                   setMutasiError(null);
@@ -372,7 +375,7 @@ export default function DetailMobilPage() {
               >
                 <History className="w-4 h-4 text-indigo-400" />
                 <span className="hidden sm:inline">Mutasi Nopol</span>
-              </button>
+              </button>}
 
               <a
                 href={`/api/export/excel?mobilId=${mobil.id}${filterTahun !== "semua" ? `&tahun=${filterTahun}` : ""}`}
@@ -453,13 +456,13 @@ export default function DetailMobilPage() {
               </span>
             </div>
 
-            <button
+            {canEdit && <button
               onClick={bukaModalTambahServis}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-2xl shadow-md shadow-blue-500/20 transition"
             >
               <Plus className="w-4 h-4" />
               <span>+ Catat Nota Baru</span>
-            </button>
+            </button>}
           </div>
 
           {/* Tabel Riwayat Servis Modern */}
@@ -532,20 +535,20 @@ export default function DetailMobilPage() {
                             >
                               <FileText className="w-4 h-4" />
                             </button>
-                            <button
+                            {canEdit && <button
                               onClick={() => bukaModalEditServis(s)}
                               className="p-2 text-amber-600 hover:text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-xl transition"
                               title="Koreksi / Edit Nota"
                             >
                               <Edit className="w-4 h-4" />
-                            </button>
-                            <button
+                            </button>}
+                            {canEdit && <button
                               onClick={() => handleHapusServis(s.id)}
                               className="p-2 text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-xl transition"
                               title="Hapus Transaksi Servis"
                             >
                               <Trash2 className="w-4 h-4" />
-                            </button>
+                            </button>}
                           </div>
                         </td>
                       </tr>

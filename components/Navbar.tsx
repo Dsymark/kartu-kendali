@@ -8,13 +8,13 @@ import { getSesiPetugas, logoutAction } from "@/lib/actions/auth";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [petugas, setPetugas] = useState<string | null>(null);
+  const [petugas, setPetugas] = useState<{ nama: string; role: string } | null>(null);
 
   useEffect(() => {
     async function checkSesi() {
       const sesi = await getSesiPetugas();
       if (sesi && sesi.nama) {
-        setPetugas(sesi.nama);
+        setPetugas({ nama: sesi.nama, role: sesi.role === "admin" ? "Admin" : "Viewer" });
       }
     }
     checkSesi();
@@ -63,7 +63,7 @@ export default function Navbar() {
                 <User className="w-3 h-3" />
               </div>
               <span className="max-w-[150px] truncate text-slate-200 font-medium">
-                {petugas}
+                {petugas.nama} · {petugas.role}
               </span>
             </div>
           )}

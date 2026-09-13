@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/actions/auth";
 
 export async function getDaftarMobil() {
   try {
@@ -81,6 +82,7 @@ export async function tambahMobil(data: {
   jabatanAwal?: string;
 }) {
   try {
+    await requireAdmin();
     const mobil = await prisma.mobil.create({
       data: {
         nama: data.nama.trim(),
@@ -120,6 +122,7 @@ export async function mutasiPemakai(
   }
 ) {
   try {
+    await requireAdmin();
     const tanggalMulai = data.tanggalMutasi ? new Date(data.tanggalMutasi) : new Date();
 
     // 1. Nonaktifkan pemakai aktif saat ini
@@ -159,6 +162,7 @@ export async function mutasiPemakai(
 
 export async function hapusMobil(id: number) {
   try {
+    await requireAdmin();
     await prisma.mobil.delete({
       where: { id },
     });

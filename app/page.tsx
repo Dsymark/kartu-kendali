@@ -16,6 +16,7 @@ import MobilCard from "@/components/MobilCard";
 import ModalTambahMobil from "@/components/ModalTambahMobil";
 import { formatRupiah } from "@/lib/utils";
 import { MobilData } from "@/lib/types";
+import { getSesiPetugas } from "@/lib/actions/auth";
 
 export default function DashboardPage() {
   const [mobilList, setMobilList] = useState<MobilData[]>([]);
@@ -23,6 +24,7 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterJenis, setFilterJenis] = useState("semua");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [canEdit, setCanEdit] = useState(false);
 
   async function loadData() {
     setLoading(true);
@@ -33,6 +35,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     loadData();
+    getSesiPetugas().then((session) => setCanEdit(session?.role === "admin"));
   }, []);
 
   // Ucapan waktu dinamis
@@ -94,13 +97,13 @@ export default function DashboardPage() {
               <span>Export Rekap Excel</span>
             </a>
 
-            <button
+            {canEdit && <button
               onClick={() => setIsModalOpen(true)}
               className="inline-flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-2xl shadow-lg shadow-blue-600/30 active:scale-95 transition"
             >
               <Plus className="w-4 h-4" />
               <span>+ Tambah Kendaraan Baru</span>
-            </button>
+            </button>}
           </div>
         </div>
       </div>
@@ -233,7 +236,7 @@ export default function DashboardPage() {
       ) : filteredMobil.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredMobil.map((m) => (
-            <MobilCard key={m.id} mobil={m} onDeleted={loadData} />
+            <MobilCard key={m.id} mobil={m} onDeleted={loadData} canEdit={canEdit} />
           ))}
         </div>
       ) : (
@@ -251,7 +254,7 @@ export default function DashboardPage() {
                 : "Mulai kelola inventaris kendaraan dinas kantor dengan mendaftarkan kendaraan pertama Anda sekarang."}
             </p>
           </div>
-          {!searchQuery && (
+          {!searchQuery && canEdit && (
             <button
               onClick={() => setIsModalOpen(true)}
               className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-2xl shadow-md shadow-blue-500/20 transition"
@@ -264,11 +267,11 @@ export default function DashboardPage() {
       )}
 
       {/* Modal Tambah Mobil */}
-      <ModalTambahMobil
+      {canEdit && <ModalTambahMobil
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={loadData}
-      />
+      />}
     </div>
   );
 }
