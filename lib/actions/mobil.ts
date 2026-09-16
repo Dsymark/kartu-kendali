@@ -1,11 +1,12 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 import { requireAdmin } from "@/lib/actions/auth";
 
 export async function getDaftarMobil() {
   try {
+    noStore();
     const mobilList = await prisma.mobil.findMany({
       include: {
         historiPemakai: {
@@ -15,7 +16,7 @@ export async function getDaftarMobil() {
           include: {
             items: true,
           },
-          orderBy: { tanggal: "desc" },
+          orderBy: { tanggal: "asc" },
         },
       },
       orderBy: { createdAt: "desc" },
@@ -40,6 +41,7 @@ export async function getDaftarMobil() {
 
 export async function getDetailMobil(id: number) {
   try {
+    noStore();
     const mobil = await prisma.mobil.findUnique({
       where: { id },
       include: {
@@ -50,7 +52,7 @@ export async function getDetailMobil(id: number) {
           include: {
             items: true,
           },
-          orderBy: { tanggal: "desc" },
+          orderBy: { tanggal: "asc" },
         },
       },
     });
