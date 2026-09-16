@@ -123,7 +123,7 @@ export default function DetailMobilPage() {
     new Set(
       mobil.riwayatServis.map((s: ServisData) => new Date(s.tanggal).getFullYear())
     )
-  ).sort((a: number, b: number) => b - a);
+  ).sort((a: number, b: number) => a - b);
 
   const filteredServis = mobil.riwayatServis.filter((s: ServisData) => {
     if (filterTahun === "semua") return true;
